@@ -15,7 +15,8 @@ public class DataManager {
 
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
-                if (line.trim().isEmpty()) continue;
+                if (line.trim().isEmpty())
+                    continue;
 
                 String[] parts = line.split(",");
                 if (parts.length < 6) {

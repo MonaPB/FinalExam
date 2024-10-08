@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1901facc-5c44-4470-9a81-6d29124ae8f7" name="Changes" comment="first commit">
-      <change afterPath="$PROJECT_DIR$/GalaxyManagement/DataManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GalaxyManagement/Galaxy.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GalaxyManagement/LifeSupportingPlanet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GalaxyManagement/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GalaxyManagement/Planet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GalaxyManagement/PlanetType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GalaxyManagement/ResourceRichPlanet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="1901facc-5c44-4470-9a81-6d29124ae8f7" name="Changes" comment="first commit" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -63,7 +54,7 @@
       <updated>1728318223199</updated>
       <workItem from="1728318224860" duration="2349000" />
       <workItem from="1728382910786" duration="7523000" />
-      <workItem from="1728391092483" duration="2210000" />
+      <workItem from="1728391092483" duration="2576000" />
     </task>
     <task id="LOCAL-00001" summary="first commit">
       <created>1728320209167</created>
@@ -72,7 +63,21 @@
       <option name="project" value="LOCAL" />
       <updated>1728320209167</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="first commit">
+      <created>1728393461289</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1728393461289</updated>
+    </task>
+    <task id="LOCAL-00003" summary="first commit">
+      <created>1728393685815</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1728393685815</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
