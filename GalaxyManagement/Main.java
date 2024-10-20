@@ -1,18 +1,19 @@
 package GalaxyManagement;
 
+import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    private static ArrayList<Galaxy> galaxies = new ArrayList<>();
+    private static List<Galaxy> galaxies = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
-    private static String dataFile = "data.txt";
+    private static final String FILE_NAME = "C:\\Users\\Mona\\IdeaProjects\\FinalExam\\PlanetInfo.txt";
 
     public static void main(String[] args) {
-        DataManager.loadData(galaxies, dataFile);
-        int choice;
+        loadGalaxiesFromFile();
 
-        do {
+        while (true) {
             System.out.println("به سیستم مدیریت کهکشان خوش آمدید!");
             System.out.println("1. نمایش کهکشان‌ها");
             System.out.println("2. اضافه کردن سیاره جدید");
@@ -21,7 +22,8 @@ public class Main {
             System.out.println("5. خروج و ذخیره اطلاعات");
             System.out.print("انتخاب شما: ");
 
-            choice = Integer.parseInt(scanner.nextLine());
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -37,148 +39,166 @@ public class Main {
                     displayPlanetInfo();
                     break;
                 case 5:
-                    DataManager.saveData(galaxies, dataFile);
-                    System.out.println("خداحافظ. اطلاعات با موفقیت ذخیره شد!");
-                    break;
+                    saveGalaxiesToFile();
+                    System.out.println("خروج و ذخیره اطلاعات...");
+                    return;
                 default:
                     System.out.println("انتخاب نامعتبر. لطفاً دوباره تلاش کنید.");
             }
-        } while (choice != 5);
+        }
     }
 
-    private static void displayGalaxies() {
-        for (Galaxy galaxy : galaxies) {
-            System.out.println("کهکشان: " + galaxy.getName());
-            System.out.println("سیارات:");
-            for (Planet planet : galaxy.getPlanets()) {
-                System.out.println(planet);
+    private static void loadGalaxiesFromFile () {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                String galaxyName = parts[0];
+                Galaxy galaxy = new Galaxy(galaxyName);
+                for (int i = 1; i < parts.length; i++) {
+                    String[] planetData = parts[i].split(";");
+                    Planet planet = new Planet(planetData[0], planetData[1], planetData[2], planetData[3], planetData[4], galaxyName);
+                    galaxy.getPlanets().add(planet);
+                }
+                galaxies.add(galaxy);
             }
-            System.out.println();
+        } catch (IOException e) {
+            System.out.println("خطا در بارگذاری کهکشان‌ها: " + e.getMessage());
         }
     }
 
-    private static void addNewPlanet() {
-        System.out.print("نام سیاره: ");
-        String name = scanner.nextLine();
-
-        // بررسی تکراری نبودن نام سیاره
-        if (findPlanetByName(name) != null) {
-            System.out.println("سیاره‌ای با این نام قبلاً وجود دارد. لطفاً نام دیگری انتخاب کنید.\n");
-            return;
+    private static void saveGalaxiesToFile () {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
+            for (Galaxy galaxy : galaxies) {
+                writer.write(galaxy.getGalaxyName());
+                for (Planet planet : galaxy.getPlanets()) {
+                    writer.write("," + planet.getPlanetName() + ";" + planet.getMoons() + ";" + planet.getDistanceFromSun() + ";" + planet.getLifeExistence() + ";" + planet.getResources());
+                }
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("خطا در ذخیره کهکشان‌ها: " + e.getMessage());
         }
+    }
 
+    private static void displayGalaxies () {
+        if (galaxies.isEmpty()) {
+            System.out.println("هیچ کهکشان موجود نیست.");
+        } else {
+            for (Galaxy galaxy : galaxies) {
+                System.out.println("کهکشان: " + galaxy.getGalaxyName());
+                System.out.println("سیارات:");
+                for (Planet planet : galaxy.getPlanets()) {
+                    System.out.println(" - " + planet.getPlanetName());
+                }
+            }
+        }
+    }
+
+    private static void addNewPlanet () {
         System.out.print("نام کهکشان: ");
         String galaxyName = scanner.nextLine();
 
-        System.out.print("نوع سیاره (سنگی/گازی): ");
-        String typeInput = scanner.nextLine();
+        Galaxy galaxy = findOrCreateGalaxy(galaxyName);
 
-        PlanetType type;
-        if (typeInput.equalsIgnoreCase("سنگی") || typeInput.equalsIgnoreCase("سنگ") || typeInput.equalsIgnoreCase("Rock")) {
-            type = PlanetType.ROCK;
-        } else if (typeInput.equalsIgnoreCase("گازی") || typeInput.equalsIgnoreCase("Gas")) {
-            type = PlanetType.GAS;
-        } else {
-            System.out.println("نوع سیاره نامعتبر است. باید 'سنگی' یا 'گازی' باشد.");
+        System.out.print("نام سیاره: ");
+        String planetName = scanner.nextLine();
+
+        System.out.print("تعداد قمر: ");
+        String moons = scanner.nextLine();
+
+        System.out.print("فاصله از خورشید: ");
+        String distanceFromSun = scanner.nextLine();
+
+        System.out.print("آیا زندگی وجود دارد؟ (بله/خیر): ");
+        String lifeExistence = scanner.nextLine();
+
+        System.out.print("منابع: ");
+        String resources = scanner.nextLine();
+
+        Planet newPlanet = new Planet(planetName, moons, distanceFromSun, lifeExistence, resources, galaxyName);
+        galaxy.getPlanets().add(newPlanet);
+        System.out.println("سیاره جدید اضافه شد.");
+    }
+
+    private static Galaxy findOrCreateGalaxy (String galaxyName){
+        for (Galaxy galaxy : galaxies) {
+            if (galaxy.getGalaxyName().equals(galaxyName)) {
+                return galaxy;
+            }
+        }
+        Galaxy newGalaxy = new Galaxy(galaxyName);
+        galaxies.add(newGalaxy);
+        return newGalaxy;
+    }
+
+    private static void changeMoonCount () {
+        System.out.print("نام کهکشان: ");
+        String galaxyName = scanner.nextLine();
+        Galaxy galaxy = findGalaxy(galaxyName);
+
+        if (galaxy == null) {
+            System.out.println("کهکشان پیدا نشد.");
             return;
         }
 
-        System.out.print("تعداد قمرها: ");
-        int moons = Integer.parseInt(scanner.nextLine());
+        System.out.print("نام سیاره: ");
+        String planetName = scanner.nextLine();
+        Planet planet = findPlanet(galaxy, planetName);
 
-        System.out.print("فاصله از خورشید (میلیون کیلومتر): ");
-        double distance = Double.parseDouble(scanner.nextLine());
-
-        System.out.print("آیا دارای حیات است؟ (بله/خیر): ");
-        String hasLifeInput = scanner.nextLine();
-        boolean hasLife = hasLifeInput.equalsIgnoreCase("بله");
-
-        System.out.print("منابع طبیعی (در صورت وجود، با کاما جدا کنید): ");
-        String resourcesInput = scanner.nextLine();
-        ArrayList<String> resources = new ArrayList<>();
-        if (!resourcesInput.isEmpty()) {
-            String[] resourcesArray = resourcesInput.split(",");
-            for (String res : resourcesArray) {
-                resources.add(res.trim());
-            }
+        if (planet == null) {
+            System.out.println("سیاره پیدا نشد.");
+            return;
         }
 
-        Planet newPlanet;
-        if (hasLife) {
-            newPlanet = new LifeSupportingPlanet(name, type, moons, distance, true);
-        } else if (!resources.isEmpty()) {
-            newPlanet = new ResourceRichPlanet(name, type, moons, distance, resources);
-        } else {
-            newPlanet = new Planet(name, type, moons, distance);
-        }
+        System.out.print("تعداد قمر جدید: ");
+        String newMoons = scanner.nextLine();
+        planet.setMoons(newMoons);
+        System.out.println("تعداد قمر سیاره تغییر کرد.");
+    }
 
-        Galaxy galaxy = findGalaxyByName(galaxyName);
+    private static void displayPlanetInfo () {
+        System.out.print("نام کهکشان: ");
+        String galaxyName = scanner.nextLine();
+        Galaxy galaxy = findGalaxy(galaxyName);
+
         if (galaxy == null) {
-            galaxy = new Galaxy(galaxyName);
-            galaxies.add(galaxy);
+            System.out.println("کهکشان پیدا نشد.");
+            return;
         }
 
-        galaxy.addPlanet(newPlanet);
-        System.out.println("سیاره جدید با نام \"" + name + "\" اضافه شد.\n");
-    }
-
-    private static void changeMoonCount() {
         System.out.print("نام سیاره: ");
         String planetName = scanner.nextLine();
+        Planet planet = findPlanet(galaxy, planetName);
 
-        Planet planet = findPlanetByName(planetName);
-        if (planet != null) {
-            System.out.print("تعداد جدید قمرها: ");
-            int newMoons = Integer.parseInt(scanner.nextLine());
-            planet.setNumberOfMoons(newMoons);
-            System.out.println("تعداد قمرهای سیاره \"" + planetName + "\" با موفقیت تغییر کرد.\n");
-        } else {
-            System.out.println("سیاره‌ای با این نام یافت نشد.\n");
+        if (planet == null) {
+            System.out.println("سیاره پیدا نشد.");
+            return;
         }
+
+        System.out.println("اطلاعات سیاره:");
+        System.out.println("نام سیاره: " + planet.getPlanetName());
+        System.out.println("تعداد قمر: " + planet.getMoons());
+        System.out.println("فاصله از خورشید: " + planet.getDistanceFromSun());
+        System.out.println("آیا زندگی وجود دارد؟ " + planet.getLifeExistence());
+        System.out.println("منابع: " + planet.getResources());
     }
 
-    private static void displayPlanetInfo() {
-        System.out.print("نام سیاره: ");
-        String planetName = scanner.nextLine();
-
-        Planet planet = findPlanetByName(planetName);
-        if (planet != null) {
-            System.out.println(planet);
-            if (planet instanceof LifeSupportingPlanet) {
-                LifeSupportingPlanet lifePlanet = (LifeSupportingPlanet) planet;
-                if (lifePlanet.hasLife()) {
-                    System.out.println("این سیاره دارای حیات است.");
-                } else {
-                    System.out.println("این سیاره دارای حیات نیست.");
-                }
-            }
-            if (planet instanceof ResourceRichPlanet) {
-                ResourceRichPlanet resourcePlanet = (ResourceRichPlanet) planet;
-                System.out.println("منابع طبیعی: " + String.join(", ", resourcePlanet.getResources()));
-            }
-            System.out.println();
-        } else {
-            System.out.println("سیاره‌ای با این نام یافت نشد.\n");
-        }
-    }
-
-    private static Galaxy findGalaxyByName(String name) {
+    private static Galaxy findGalaxy (String galaxyName){
         for (Galaxy galaxy : galaxies) {
-            if (galaxy.getName().equalsIgnoreCase(name)) {
+            if (galaxy.getGalaxyName().equals(galaxyName)) {
                 return galaxy;
             }
         }
         return null;
     }
 
-    private static Planet findPlanetByName(String name) {
-        for (Galaxy galaxy : galaxies) {
-            Planet planet = galaxy.getPlanetByName(name);
-            if (planet != null) {
+    private static Planet findPlanet (Galaxy galaxy, String planetName){
+        for (Planet planet : galaxy.getPlanets()) {
+            if (planet.getPlanetName().equalsIgnoreCase(planetName)) {
                 return planet;
             }
         }
         return null;
     }
 }
-

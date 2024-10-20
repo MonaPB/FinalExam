@@ -1,55 +1,95 @@
 package GalaxyManagement;
 
-public class Planet {
-    private String name;
-    private PlanetType type;
-    private int numberOfMoons;
-    private double distanceFromSun;
+public class Planet{
+    private String planetName;
+    private PlanetType planetType;
+    private String moons;
+    private String distanceFromSun;
 
-    public Planet(String name, PlanetType type, int numberOfMoons, double distanceFromSun) {
-        this.name = name;
-        this.type = type;
-        this.numberOfMoons = numberOfMoons;
+    private String lifeExistence;
+    public String resources;
+    public String galaxyName;
+
+    public Planet(String planetName, String moons, String distanceFromSun, String lifeExistence, String resources,String galaxyName) {
+        this.planetName = planetName;
+        this.moons = moons;
+        this.distanceFromSun = distanceFromSun;
+        this.lifeExistence = lifeExistence;
+        this.resources = resources;
+        this.galaxyName = galaxyName;
+    }
+
+
+    public Planet(String planetName, String planetType, String moons, double distanceFromSun) {
+    }
+
+    public Planet(String planetName) {
+        this.planetName = planetName;
+    }
+
+    public Planet() {
+    }
+
+    public Planet(String planetName, PlanetType planetType, String moons, String distanceFromSun) {
+        this.planetName = planetName;
+        this.planetType = planetType;
+        this.moons = moons;
         this.distanceFromSun = distanceFromSun;
     }
 
-    public String getName() {
-        return name;
+    public String getPlanetName() {
+        return planetName;
     }
 
-    public PlanetType getType() {
-        return type;
+    public void setPlanetName(String planetName) {
+        this.planetName = planetName;
     }
 
-    public void setType(PlanetType type) {
-        this.type = type;
+    public PlanetType getPlanetType() {
+        return planetType;
     }
 
-    public int getNumberOfMoons() {
-        return numberOfMoons;
+    public void setPlanetType(PlanetType planetType) {
+        this.planetType = planetType;
     }
 
-    public void setNumberOfMoons(int numberOfMoons) {
-        this.numberOfMoons = numberOfMoons;
+    public String getMoons() {
+        return moons;
     }
 
-    public double getDistanceFromSun() {
+    public void setMoons(String moons) {
+        this.moons = moons;
+    }
+
+    public String getDistanceFromSun() {
         return distanceFromSun;
     }
 
-    public void setDistanceFromSun(double distanceFromSun) {
+    public void setDistanceFromSun(String distanceFromSun) {
         this.distanceFromSun = distanceFromSun;
     }
 
-    public void addMoon() {
-        this.numberOfMoons++;
+    public String getLifeExistence() {
+        return lifeExistence;
     }
 
-    @Override
-    public String toString() {
-        return "نام: " + name +
-                ", نوع: " + type +
-                ", تعداد قمرها: " + numberOfMoons +
-                ", فاصله از خورشید: " + distanceFromSun + " میلیون کیلومتر";
+    public void setLifeExistence(String lifeExistence) {
+        this.lifeExistence = lifeExistence;
+    }
+
+    public String getResources() {
+        return resources;
+    }
+
+    public void setResources(String resources) {
+        this.resources = resources;
+    }
+
+    public String getGalaxyName() {
+        return galaxyName;
+    }
+
+    public void setGalaxyName(String galaxyName) {
+        this.galaxyName = galaxyName;
     }
 }

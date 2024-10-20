@@ -1,22 +1,27 @@
 package GalaxyManagement;
 
-import java.util.ArrayList;
+public class ResourceRichPlanet extends Planet implements ResourceRichStatus{
 
-public class ResourceRichPlanet extends Planet {
-    private ArrayList<String> resources;
 
-    public ResourceRichPlanet(String name, PlanetType type, int numberOfMoons, double distanceFromSun, ArrayList<String> resources) {
-        super(name, type, numberOfMoons, distanceFromSun);
-        this.resources = resources;
+    public ResourceRichPlanet(String planetName, String moons, String distanceFromSun, String lifeExistence, String resources, String galaxyName) {
+        super(planetName, moons, distanceFromSun, lifeExistence, resources, galaxyName);
     }
 
-    public ArrayList<String> getResources() {
-        return resources;
+    public ResourceRichPlanet(String planetName, PlanetType planetType, String moons, String distanceFromSun) {
+        super(planetName, planetType, moons, distanceFromSun);
     }
+
+    public ResourceRichPlanet(String planetName) {
+        super(planetName);
+    }
+
+    public ResourceRichPlanet() {
+    }
+
+
 
     @Override
-    public String toString() {
-        return super.toString() + ", منابع طبیعی: " + String.join(", ", resources);
+    public void resourceRich() {
+        System.out.println("this planet is resource rich");
     }
 }
-
